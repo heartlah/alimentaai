@@ -1,57 +1,45 @@
-# Arquitetura - Alimenta Aí!
+# Arquitetura — Alimenta Aí!
 
-## Diagrama de Contexto
+## Escolhas Tecnológicas
 
-```mermaid
-graph TD
-    Doador["Doador"]
-    Receptor["Receptor"]
-    Admin["Admin"]
-    Sistema["Alimenta Aí!"]
-    
-    Doador --> Sistema
-    Receptor --> Sistema
-    Admin --> Sistema
+A solução foi desenvolvida como uma **aplicação web estática** utilizando apenas HTML, CSS e JavaScript puro, sem frameworks ou bibliotecas externas. Esta escolha foi motivada pela simplicidade de execução e pela ausência de necessidade de infraestrutura de servidor para o escopo do projeto.
+
+A persistência de dados é realizada via **localStorage** do navegador, o que permite que os dados sejam mantidos entre sessões sem a necessidade de um banco de dados externo.
+
+## Modelo Arquitetural
+
+A arquitetura segue o padrão de **Single Page Application (SPA) simplificada**, com uma única página HTML que gerencia múltiplas "telas" por meio de manipulação de DOM.
+
+```
+┌─────────────────────────────────────────┐
+│              Navegador Web              │
+│                                         │
+│  ┌────────────────────────────────────┐ │
+│  │         index.html (SPA)           │ │
+│  │                                    │ │
+│  │  ┌──────────┐  ┌────────────────┐  │ │
+│  │  │   HTML   │  │   JavaScript   │  │ │
+│  │  │ (Views)  │  │  (Controller)  │  │ │
+│  │  └──────────┘  └───────┬────────┘  │ │
+│  │       ▲                │           │ │
+│  │       │         ┌──────▼────────┐  │ │
+│  │       └─────────│  localStorage │  │ │
+│  │                 │   (Model)     │  │ │
+│  │                 └───────────────┘  │ │
+│  └────────────────────────────────────┘ │
+└─────────────────────────────────────────┘
 ```
 
-## Diagrama de Containers
+**Camadas:**
+- **View (HTML/CSS):** renderização das telas de autenticação, feed, cadastro e gerenciamento
+- **Controller (JavaScript):** lógica de negócio, validações e manipulação de eventos
+- **Model (localStorage):** armazenamento persistente de usuários e doações
 
-```mermaid
-graph TD
-    Frontend["React"]
-    Backend["Spring Boot"]
-    Database["PostgreSQL"]
-    Usuario["Usuário"]
-    
-    Usuario --> Frontend
-    Frontend --> Backend
-    Backend --> Database
-```
+## Justificativa
 
-## Diagrama de Componentes
+Para o escopo do projeto (aplicação acadêmica individual com foco em funcionalidade), a arquitetura escolhida é adequada pois:
 
-```mermaid
-graph TD
-    Controller["Controller"]
-    Service["Service"]
-    Repository["Repository"]
-    Frontend["React"]
-    Database["PostgreSQL"]
-    
-    Frontend --> Controller
-    Controller --> Service
-    Service --> Repository
-    Repository --> Database
-```
-
-## Tecnologias
-
-- Java 21 + Spring Boot
-- React 18
-- PostgreSQL 15
-
-## Justificativas
-
-1. Java + Spring Boot: segurança e tipagem forte
-2. PostgreSQL: evita que dois peguem a mesma doação
-3. React: interface rápida
+1. **Simplicidade:** não exige instalação de dependências, servidores ou banco de dados
+2. **Portabilidade:** qualquer navegador moderno executa a aplicação sem configuração
+3. **Foco no domínio:** permite concentrar esforços nas regras de negócio e experiência do usuário
+4. **Rastreabilidade:** todo o código em um único arquivo facilita revisão e avaliação
