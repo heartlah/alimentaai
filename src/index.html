@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alimenta Aí!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #2E7D32;
+      --green-lt: #4CAF50;
+      --green-bg: #E8F5E9;
+      --orange:   #E65100;
+      --orange-lt:#FF8F00;
+      --cream:    #FAFAF7;
+      --dark:     #1A1A1A;
+      --muted:    #6B7280;
+      --border:   #E5E7EB;
+      --white:    #FFFFFF;
+      --red:      #C62828;
+      --red-bg:   #FFEBEE;
+      --shadow:   0 2px 12px rgba(0,0,0,0.08);
+      --radius:   12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--green);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .logo {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: #A5D6A7; }
+    #user-info {
+      display: flex; align-items: center; gap: 12px;
+    }
+    #username-display {
+      color: #fff; font-size: 0.9rem; font-weight: 600;
+    }
+    .btn-header {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; padding: 6px 14px; border-radius: 8px;
+      cursor: pointer; font-size: 0.85rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn-header:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── PAGES ── */
+    .page { display: none !important; }
+    .page.active { display: block !important; }
+
+    /* ── AUTH ── */
+    #page-auth.active {
+      display: flex !important; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
+      background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%);
+    }
+
+    .auth-card {
+      background: #fff; border-radius: 20px;
+      padding: 40px; width: 100%; max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .auth-logo {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 2rem;
+      color: var(--green); text-align: center; margin-bottom: 4px;
+    }
+    .auth-logo span { color: var(--orange); }
+    .auth-tagline {
+      text-align: center; color: var(--muted);
+      font-size: 0.85rem; margin-bottom: 28px;
+    }
+    .auth-tabs {
+      display: flex; gap: 0; margin-bottom: 24px;
+      border: 2px solid var(--border); border-radius: 10px; overflow: hidden;
+    }
+    .auth-tab {
+      flex: 1; padding: 10px; text-align: center;
+      cursor: pointer; font-weight: 600; font-size: 0.9rem;
+      color: var(--muted); background: #fff; border: none;
+      transition: all 0.2s;
+    }
+    .auth-tab.active { background: var(--green); color: #fff; }
+
+    .auth-form { display: none; flex-direction: column; gap: 14px; }
+    .auth-form.active { display: flex; }
+
+    label { font-size: 0.85rem; font-weight: 600; color: #374151; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    input[type="text"], input[type="email"], input[type="password"],
+    input[type="date"], textarea, select {
+      padding: 10px 14px; border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      transition: border-color 0.2s; background: #fff; color: var(--dark);
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none; border-color: var(--green-lt);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .radio-group { display: flex; gap: 16px; }
+    .radio-group label {
+      display: flex; align-items: center; gap: 6px;
+      font-weight: 500; cursor: pointer; font-size: 0.9rem;
+    }
+
+    .btn { 
+      padding: 11px 20px; border: none; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--green); color: #fff;
+    }
+    .btn-primary:hover { background: var(--green-lt); transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--green-bg); color: var(--green);
+    }
+    .btn-secondary:hover { background: #C8E6C9; }
+    .btn-danger { background: var(--red-bg); color: var(--red); }
+    .btn-danger:hover { background: #FFCDD2; }
+    .btn-orange { background: #FFF3E0; color: var(--orange); }
+    .btn-orange:hover { background: #FFE0B2; }
+    .btn-full { width: 100%; }
+    .btn-sm { padding: 6px 12px; font-size: 0.82rem; }
+
+    /* ── MAIN LAYOUT ── */
+    #page-app { min-height: 100vh; }
+    #page-app.active { display: block; }
+
+    nav.tabs {
+      background: #fff; border-bottom: 2px solid var(--border);
+      display: flex; gap: 0; padding: 0 24px; overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 14px 20px; border: none; background: none;
+      font-weight: 600; font-size: 0.9rem; color: var(--muted);
+      cursor: pointer; border-bottom: 3px solid transparent;
+      margin-bottom: -2px; white-space: nowrap; transition: all 0.2s;
+    }
+    .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+    .tab-btn:hover { color: var(--green); }
+
+    .main-content {
+      max-width: 900px; margin: 0 auto; padding: 24px 16px;
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 20px; flex-wrap: gap;
+    }
+    .section-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.4rem; font-weight: 800; color: var(--dark);
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff; border-radius: var(--radius);
+      padding: 20px; box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .card + .card { margin-top: 14px; }
+
+    .donation-card {
+      background: #fff; border-radius: var(--radius);
+      padding: 18px; box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.15s;
+    }
+    .donation-card:hover { transform: translateY(-2px); }
+
+    .donation-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .donation-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1.05rem; margin-bottom: 6px;
+    }
+    .donation-meta {
+      font-size: 0.82rem; color: var(--muted); margin-bottom: 10px; line-height: 1.6;
+    }
+    .donation-meta strong { color: var(--dark); }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-block; padding: 3px 10px;
+      border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-disponivel { background: var(--green-bg); color: var(--green); }
+    .badge-reservado  { background: #FFF3E0; color: var(--orange); }
+    .badge-entregue   { background: #E3F2FD; color: #1565C0; }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center; padding: 48px 24px; color: var(--muted);
+    }
+    .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty h3 { font-family: 'Nunito', sans-serif; font-weight: 800; color: #374151; margin-bottom: 6px; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--dark); color: #fff; padding: 12px 24px;
+      border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999;
+    }
+    #toast.show { opacity: 1; }
+    #toast.success { background: var(--green); }
+    #toast.error   { background: var(--red); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 500;
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 16px;
+      padding: 28px; width: 100%; max-width: 480px;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .modal-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1.2rem; margin-bottom: 20px;
+    }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px; margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #fff; border-radius: var(--radius);
+      padding: 18px; box-shadow: var(--shadow); border: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'Nunito', sans-serif;
+      font-size: 2rem; font-weight: 800; color: var(--green);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── FORM SECTION ── */
+    .form-card {
+      background: #fff; border-radius: var(--radius);
+      padding: 24px; box-shadow: var(--shadow); border: 1px solid var(--border);
+    }
+    .form-card .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .form-card .span-2 { grid-column: span 2; }
+
+    @media (max-width: 580px) {
+      .form-card .form-grid { grid-template-columns: 1fr; }
+      .form-card .span-2 { grid-column: span 1; }
+      .donation-grid { grid-template-columns: 1fr; }
+    }
+
+    .divider {
+      height: 1px; background: var(--border); margin: 16px 0;
+    }
+
+    .card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+    .tag-doador {
+      display: inline-block; background: #E8F5E9; color: var(--green);
+      border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 600;
+    }
+    .tag-receptor {
+      display: inline-block; background: #E3F2FD; color: #1565C0;
+      border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<!-- AUTH PAGE -->
+<div id="page-auth" class="page active">
+  <div class="auth-card">
+    <div class="auth-logo">Alimenta <span>Aí!</span></div>
+    <p class="auth-tagline">Conectando doadores a quem mais precisa.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Entrar</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Cadastrar</button>
+    </div>
+
+    <!-- Login -->
+    <form class="auth-form active" id="form-login" onsubmit="login(event)">
+      <div class="field">
+        <label for="login-email">E-mail</label>
+        <input type="email" id="login-email" placeholder="seuemail@gmail.com" required />
+      </div>
+      <div class="field">
+        <label for="login-pass">Senha</label>
+        <input type="password" id="login-pass" placeholder="••••••••" required />
+      </div>
+      <button class="btn btn-primary btn-full" type="submit">Entrar</button>
+      <p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-top:8px">
+        Não tem conta ainda? Clique em <strong>Cadastrar</strong> acima.
+      </p>
+    </form>
+
+    <!-- Register -->
+    <form class="auth-form" id="form-register" onsubmit="register(event)">
+      <div class="field">
+        <label for="reg-name">Nome completo</label>
+        <input type="text" id="reg-name" placeholder="Seu nome" required />
+      </div>
+      <div class="field">
+        <label for="reg-email">E-mail</label>
+        <input type="email" id="reg-email" placeholder="seuemail@gmail.com" required />
+      </div>
+      <div class="field">
+        <label for="reg-pass">Senha</label>
+        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" required minlength="6" />
+      </div>
+      <div class="field">
+        <label>Tipo de usuário</label>
+        <div class="radio-group">
+          <label><input type="radio" name="reg-tipo" value="doador" checked /> Doador</label>
+          <label><input type="radio" name="reg-tipo" value="receptor" /> Receptor</label>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" type="submit">Criar conta</button>
+    </form>
+  </div>
+</div>
+
+<!-- APP PAGE -->
+<div id="page-app" class="page">
+  <header>
+    <div class="logo">Alimenta <span>Aí!</span></div>
+    <div id="user-info">
+      <span id="username-display"></span>
+      <button class="btn-header" onclick="logout()">Sair</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="showTab('feed', this)">Início</button>
+    <button class="tab-btn" onclick="showTab('nova-doacao', this)">Nova Doação</button>
+    <button class="tab-btn" onclick="showTab('minhas-doacoes', this)">Minhas Doações</button>
+    <button class="tab-btn" onclick="showTab('solicitacoes', this)">Solicitações</button>
+  </nav>
+
+  <!-- TAB: FEED -->
+  <div id="tab-feed" class="main-content">
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="section-header">
+      <h2 class="section-title">Doações disponíveis</h2>
+    </div>
+    <div class="donation-grid" id="feed-list"></div>
+  </div>
+
+  <!-- TAB: NOVA DOAÇÃO -->
+  <div id="tab-nova-doacao" class="main-content" style="display:none">
+    <div class="section-header">
+      <h2 class="section-title">Cadastrar doação</h2>
+    </div>
+    <div class="form-card">
+      <form onsubmit="cadastrarDoacao(event)">
+        <div class="form-grid">
+          <div class="field span-2">
+            <label>Nome do alimento *</label>
+            <input type="text" id="d-nome" placeholder="Ex: Arroz, Pão, Frutas..." required />
+          </div>
+          <div class="field">
+            <label>Quantidade</label>
+            <input type="text" id="d-qtd" placeholder="Ex: 5 kg, 10 unidades" />
+          </div>
+          <div class="field">
+            <label>Validade</label>
+            <input type="date" id="d-validade" />
+          </div>
+          <div class="field span-2">
+            <label>Descrição</label>
+            <textarea id="d-desc" placeholder="Informações adicionais sobre o alimento..."></textarea>
+          </div>
+          <div class="field span-2">
+            <label>Local de retirada *</label>
+            <input type="text" id="d-local" placeholder="Endereço ou ponto de referência" required />
+          </div>
+        </div>
+        <div style="margin-top:18px">
+          <button class="btn btn-primary" type="submit">Cadastrar doação</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TAB: MINHAS DOAÇÕES -->
+  <div id="tab-minhas-doacoes" class="main-content" style="display:none">
+    <div class="section-header">
+      <h2 class="section-title">Minhas doações</h2>
+    </div>
+    <div class="donation-grid" id="minhas-list"></div>
+  </div>
+
+  <!-- TAB: SOLICITAÇÕES -->
+  <div id="tab-solicitacoes" class="main-content" style="display:none">
+    <div class="section-header">
+      <h2 class="section-title">Minhas solicitações</h2>
+    </div>
+    <div class="donation-grid" id="solic-list"></div>
+  </div>
+</div>
+
+<!-- MODAL: ALTERAR STATUS -->
+<div class="modal-overlay" id="modal-status">
+  <div class="modal">
+    <div class="modal-title">Alterar status da doação</div>
+    <div class="field">
+      <label>Novo status</label>
+      <select id="select-status">
+        <option value="disponivel">Disponível</option>
+        <option value="reservado">Reservado</option>
+        <option value="entregue">Entregue</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-status')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarStatus()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ─── STORAGE HELPERS ────────────────────────────────────────
+const DB = {
+  get: k => JSON.parse(localStorage.getItem(k) || 'null'),
+  set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+};
+
+function getUsers()     { return DB.get('aa_users')    || []; }
+function getDoacoes()   { return DB.get('aa_doacoes')  || []; }
+function getCurrentUser(){ return DB.get('aa_current') || null; }
+
+function saveUsers(u)   { DB.set('aa_users', u); }
+function saveDoacoes(d) { DB.set('aa_doacoes', d); }
+
+// ─── AUTH ────────────────────────────────────────────────────
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) =>
+    t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1))
+  );
+  document.getElementById('form-login').classList.toggle('active', tab==='login');
+  document.getElementById('form-register').classList.toggle('active', tab==='register');
+}
+
+function register(e) {
+  e.preventDefault();
+  const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('reg-pass').value;
+  const tipo  = document.querySelector('input[name="reg-tipo"]:checked').value;
+
+  const users = getUsers();
+  if (users.find(u => u.email === email)) {
+    toast('Este e-mail já está cadastrado.', 'error'); return;
+  }
+  const user = { id: Date.now().toString(), name, email, pass, tipo };
+  users.push(user);
+  saveUsers(users);
+  DB.set('aa_current', user);
+  toast('Conta criada com sucesso!', 'success');
+  openApp();
+}
+
+function login(e) {
+  e.preventDefault();
+  const email = document.getElementById("login-email").value.trim().toLowerCase();
+  const pass  = document.getElementById("login-pass").value.trim();
+  const users = getUsers();
+  console.log("Usuarios:", users.map(u => ({email: u.email, pass: u.pass})));
+  console.log("Tentativa:", {email, pass});
+  const emailExiste = users.find(u => u.email === email);
+  const user = users.find(u => u.email === email && u.pass === pass);
+  if (!user) {
+    if (!emailExiste) { toast("E-mail nao encontrado. Cadastre-se primeiro.", "error"); }
+    else { toast("Senha incorreta. Tente novamente.", "error"); }
+    return;
+  }
+  DB.set("aa_current", user);
+  toast("Bem-vindo(a), " + user.name + "!", "success");
+  openApp();
+}
+
+function logout() {
+  DB.set('aa_current', null);
+  document.getElementById('page-app').classList.remove('active');
+  document.getElementById('page-auth').classList.add('active');
+  toast('Sessão encerrada.');
+}
+
+function openApp() {
+  const user = getCurrentUser();
+  document.getElementById('page-auth').classList.remove('active');
+  document.getElementById('page-app').classList.add('active');
+  document.getElementById('username-display').textContent = user.name + ' · ' + 
+    (user.tipo === 'doador' ? 'Doador' : 'Receptor');
+  renderFeed();
+  renderMinhas();
+  renderSolicitacoes();
+}
+
+// ─── TABS ────────────────────────────────────────────────────
+function showTab(tab, btn) {
+  ['feed','nova-doacao','minhas-doacoes','solicitacoes'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (tab === 'feed')           renderFeed();
+  if (tab === 'minhas-doacoes') renderMinhas();
+  if (tab === 'solicitacoes')   renderSolicitacoes();
+}
+
+// ─── DOAÇÕES ─────────────────────────────────────────────────
+function cadastrarDoacao(e) {
+  e.preventDefault();
+  const user = getCurrentUser();
+  const d = {
+    id:       Date.now().toString(),
+    doadorId: user.id,
+    doador:   user.name,
+    nome:     document.getElementById('d-nome').value.trim(),
+    qtd:      document.getElementById('d-qtd').value.trim(),
+    validade: document.getElementById('d-validade').value,
+    desc:     document.getElementById('d-desc').value.trim(),
+    local:    document.getElementById('d-local').value.trim(),
+    status:   'disponivel',
+    criadoEm: new Date().toLocaleDateString('pt-BR'),
+    solicitantes: [],
+  };
+  const doacoes = getDoacoes();
+  doacoes.push(d);
+  saveDoacoes(doacoes);
+  e.target.reset();
+  toast('Doação cadastrada com sucesso!', 'success');
+  renderFeed();
+  renderMinhas();
+}
+
+// ─── STATUS MODAL ─────────────────────────────────────────────
+let editingId = null;
+function abrirModalStatus(id) {
+  editingId = id;
+  const d = getDoacoes().find(x => x.id === id);
+  document.getElementById('select-status').value = d.status;
+  document.getElementById('modal-status').classList.add('open');
+}
+function confirmarStatus() {
+  const doacoes = getDoacoes();
+  const idx = doacoes.findIndex(x => x.id === editingId);
+  doacoes[idx].status = document.getElementById('select-status').value;
+  saveDoacoes(doacoes);
+  closeModal('modal-status');
+  toast('Status atualizado!', 'success');
+  renderFeed(); renderMinhas(); renderSolicitacoes();
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// ─── SOLICITAR ────────────────────────────────────────────────
+function solicitarDoacao(id) {
+  const user = getCurrentUser();
+  const doacoes = getDoacoes();
+  const idx = doacoes.findIndex(x => x.id === id);
+  const d = doacoes[idx];
+  if (d.doadorId === user.id) { toast('Você não pode solicitar sua própria doação.', 'error'); return; }
+  if (d.status !== 'disponivel') { toast('Esta doação não está mais disponível.', 'error'); return; }
+  if (d.solicitantes.includes(user.id)) { toast('Você já solicitou esta doação.', 'error'); return; }
+  d.solicitantes.push(user.id);
+  d.status = 'reservado';
+  saveDoacoes(doacoes);
+  toast('Solicitação enviada! Aguarde contato do doador.', 'success');
+  renderFeed(); renderSolicitacoes();
+}
+
+// ─── RENDER FEED ──────────────────────────────────────────────
+function renderFeed() {
+  const user = getCurrentUser();
+  const doacoes = getDoacoes().filter(d => d.status === 'disponivel' && d.doadorId !== user.id);
+  const el = document.getElementById('feed-list');
+
+  // Stats
+  const all = getDoacoes();
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-number">${all.length}</div><div class="stat-label">Doações cadastradas</div></div>
+    <div class="stat-card"><div class="stat-number">${all.filter(d=>d.status==='disponivel').length}</div><div class="stat-label">Disponíveis</div></div>
+    <div class="stat-card"><div class="stat-number">${all.filter(d=>d.status==='entregue').length}</div><div class="stat-label">Entregues</div></div>
+  `;
+
+  if (!doacoes.length) {
+    el.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      
+      <h3>Nenhuma doação disponível</h3>
+      <p>Seja o primeiro a cadastrar uma doação!</p>
+    </div>`; return;
+  }
+  el.innerHTML = doacoes.map(d => cardHTML(d, 'feed')).join('');
+}
+
+function renderMinhas() {
+  const user = getCurrentUser();
+  const doacoes = getDoacoes().filter(d => d.doadorId === user.id);
+  const el = document.getElementById('minhas-list');
+  if (!doacoes.length) {
+    el.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      
+      <h3>Nenhuma doação cadastrada</h3>
+      <p>Clique em "Nova Doação" para começar.</p>
+    </div>`; return;
+  }
+  el.innerHTML = doacoes.map(d => cardHTML(d, 'minhas')).join('');
+}
+
+function renderSolicitacoes() {
+  const user = getCurrentUser();
+  const doacoes = getDoacoes().filter(d => d.solicitantes.includes(user.id));
+  const el = document.getElementById('solic-list');
+  if (!doacoes.length) {
+    el.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      
+      <h3>Nenhuma solicitação feita</h3>
+      <p>Vá até "Início" para ver doações disponíveis.</p>
+    </div>`; return;
+  }
+  el.innerHTML = doacoes.map(d => cardHTML(d, 'solic')).join('');
+}
+
+function cardHTML(d, ctx) {
+  const badge = {
+    disponivel: '<span class="badge badge-disponivel">Disponível</span>',
+    reservado:  '<span class="badge badge-reservado">Reservado</span>',
+    entregue:   '<span class="badge badge-entregue">Entregue</span>',
+  }[d.status];
+
+  const actions = {
+    feed:   `<button class="btn btn-secondary btn-sm" onclick="solicitarDoacao('${d.id}')">Solicitar</button>`,
+    minhas: `<button class="btn btn-orange btn-sm" onclick="abrirModalStatus('${d.id}')">Alterar status</button>`,
+    solic:  '',
+  }[ctx];
+
+  return `
+  <div class="donation-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div class="donation-title">${d.nome}</div>
+      ${badge}
+    </div>
+    <div class="donation-meta">
+      ${d.qtd ? `<strong>Qtd:</strong> ${d.qtd}<br>` : ''}
+      ${d.validade ? `<strong>Validade:</strong> ${d.validade}<br>` : ''}
+      <strong>Local:</strong> ${d.local}<br>
+      ${d.desc ? `<strong>Descrição:</strong> ${d.desc}<br>` : ''}
+      <strong>Doador:</strong> ${d.doador}<br>
+      <strong>Cadastrado em:</strong> ${d.criadoEm}
+    </div>
+    <div class="card-actions">${actions}</div>
+  </div>`;
+}
+
+// ─── TOAST ────────────────────────────────────────────────────
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show ' + type;
+  setTimeout(() => el.className = '', 2800);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+(function init() {
+  const user = getCurrentUser();
+  if (user) openApp();
+})();
+</script>
+</body>
+</html>
